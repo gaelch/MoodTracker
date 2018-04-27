@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_sage"
+    android:orientation="vertical"
+    tools:context=".controller.MoodFragment">
+
+    <ImageView
+        android:id="@+id/fragment_mood_image"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/smiley_happy" />
+
+
+    <ImageButton
+        android:id="@+id/fragment_mood_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="27dp"
+        android:layout_marginStart="323dp"
+        android:background="@color/light_sage"
+        android:src="@drawable/ic_history_black" />
+
+    <ImageButton
+        android:id="@+id/fragment_note_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginStart="20dp"
+        android:background="@color/light_sage"
+        android:src="@drawable/ic_note_add_black"
+        android:visibility="visible" />
+
+
+</RelativeLayout>
