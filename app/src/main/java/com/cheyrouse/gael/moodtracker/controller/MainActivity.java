@@ -1,10 +1,10 @@
 package com.cheyrouse.gael.moodtracker.controller;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import com.cheyrouse.gael.moodtracker.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

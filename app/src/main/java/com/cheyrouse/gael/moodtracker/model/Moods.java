@@ -1,5 +1,7 @@
 package com.cheyrouse.gael.moodtracker.model;
 
+import java.util.ArrayList;
+
 public class Moods {
 
     private String mSmiley;
