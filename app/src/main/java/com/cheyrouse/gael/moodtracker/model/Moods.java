@@ -1,28 +1,20 @@
 package com.cheyrouse.gael.moodtracker.model;
 
-import java.util.ArrayList;
+
 
 public class Moods {
 
-    private String mSmiley;
-    private String mBackground;
+    private final int mId;
+    private int mSmiley;
+    private int mBackground;
     private String mComment;
 
-    public String getmBackground() {
-        return mBackground;
-    }
-
-    public void setmBackground(String mBackground) {
-        this.mBackground = mBackground;
-    }
-
-    public String getmSmiley() {
-
+    public int getmSmiley() {
         return mSmiley;
     }
 
-    public void setmSmiley(String mSmiley) {
-        this.mSmiley = mSmiley;
+    public int getmBackground() {
+        return mBackground;
     }
 
     public String getmComment() {
@@ -33,10 +25,10 @@ public class Moods {
         this.mComment = mComment;
     }
 
-    public Moods(){
-        mSmiley = "";
-        mBackground = "";
-        mComment = "";
+    public Moods(int smiley, int background, int id){
+        mSmiley = smiley;
+        mBackground = background;
+        mId = id;
 
     }
 }
