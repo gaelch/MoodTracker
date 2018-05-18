@@ -1,17 +1,18 @@
 package com.cheyrouse.gael.moodtracker.model;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-
+import com.cheyrouse.gael.moodtracker.controller.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class Prefs {
-   /* private static Prefs instance;
+public class Prefs  {
+    @SuppressLint("StaticFieldLeak")
+    private static Prefs instance;
     private static String PREFS_MOODSTORE = "Moodstore";
     private static String Moods = "Moods";
     public static ArrayList<com.cheyrouse.gael.moodtracker.model.Moods> get;
@@ -23,10 +24,10 @@ public class Prefs {
     }
 
     public void setPrefs(SharedPreferences prefs) {
-        this.prefs = prefs;
+        Prefs.prefs = prefs;
     }
 
-    private SharedPreferences prefs;
+    private static SharedPreferences prefs;
     private Moods moods;
 
 
@@ -37,7 +38,7 @@ public class Prefs {
 
     }
 
-    public static Prefs get(Context context) {
+    public static Prefs get(MainActivity context) {
         if (instance == null)
             instance = new Prefs(context);
         return instance;
@@ -54,7 +55,7 @@ public class Prefs {
         editor.apply();
     }
 
-    public ArrayList<Moods> getMoodstore() {
+    public static ArrayList<Moods> getMoodstore() {
         Gson gson = new Gson();
         String json = prefs.getString(Moods, "");
 
@@ -71,7 +72,7 @@ public class Prefs {
         //return the value that was stored under the key
         //"NAME". If there was no value stored under this key, return null.
         return moodstore;
-    }*/
+    }
 }
 
 
