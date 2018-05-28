@@ -4,7 +4,7 @@ package com.cheyrouse.gael.moodtracker.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Moods implements Parcelable {
+public class Mood implements Parcelable {
 
     private int mSmiley;
     private int mBackground;
@@ -28,19 +28,26 @@ public class Moods implements Parcelable {
         return mBackground;
     }
 
-    public String getmComment() {
+    public  String getmComment() {
         return mComment;
     }
 
-    public void setmComent(String mComment) {
-        this.mComment = mComment;
+    public static void setmComment(String mComment) {
     }
 
+    @Override
+    public String toString() {
+        return "Mood{" +
+                "mComment='" + mComment + '\'' +
+                '}';
+    }
 
-    public Moods(int smiley, int background, int id) {
+    public Mood(int smiley, int background, int id, String comment) {
 
         mSmiley = smiley;
         mBackground = background;
+        mId = id;
+        mComment = comment;
     }
 
     @Override
@@ -55,21 +62,21 @@ public class Moods implements Parcelable {
         dest.writeString(this.mComment);
     }
 
-    private Moods(Parcel in) {
+    private Mood(Parcel in) {
         this.mSmiley = in.readInt();
         this.mBackground = in.readInt();
         this.mComment = in.readString();
     }
 
-    public static final Parcelable.Creator<Moods> CREATOR = new Parcelable.Creator<Moods>() {
+    public static final Parcelable.Creator<Mood> CREATOR = new Parcelable.Creator<Mood>() {
         @Override
-        public Moods createFromParcel(Parcel source) {
-            return new Moods(source);
+        public Mood createFromParcel(Parcel source) {
+            return new Mood(source);
         }
 
         @Override
-        public Moods[] newArray(int size) {
-            return new Moods[size];
+        public Mood[] newArray(int size) {
+            return new Mood[size];
         }
     };
 }

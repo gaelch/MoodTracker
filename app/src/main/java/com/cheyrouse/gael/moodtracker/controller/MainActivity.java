@@ -1,5 +1,6 @@
 package com.cheyrouse.gael.moodtracker.controller;
-import android.annotation.SuppressLint;
+
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,25 +12,29 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.cheyrouse.gael.moodtracker.R;
-import com.cheyrouse.gael.moodtracker.model.Moods;
+import com.cheyrouse.gael.moodtracker.model.Mood;
 import com.cheyrouse.gael.moodtracker.model.Prefs;
 import java.util.ArrayList;
+
+import static com.cheyrouse.gael.moodtracker.model.Prefs.getMoodstore;
 
 
 public class MainActivity extends Activity implements OnGestureListener, View.OnClickListener, View.OnTouchListener {
 
     private ImageView mSmileyMood;
-    private ArrayList<Moods> moodsLst;
-    private ArrayList<Moods> prefsMoodStore;
+    private ArrayList<Mood> moodLst;
+    private ArrayList<Mood> prefsMoodStore;
     private int counter;
     private GestureDetector mDetector;
     private RelativeLayout mLayout;
-    private View mHistoryButton;
-    private View mNoteAddButton;
+    private ImageButton mHistoryButton;
+    private ImageButton mNoteAddButton;
+    private String mComment;
 
 
 
@@ -41,22 +46,25 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
 
         initListener();
 
-        Moods moods2 = initMoodsList();
+        Mood mood2 = initMoodsList();
 
         counter = 1;
 
-        saveDefaultMood(moods2);
+        saveDefaultMood(mood2);
     }
 
-    private void saveDefaultMood(Moods moods2) {
-        Prefs prefs = Prefs.get(this);
-        prefsMoodStore = prefs.getMoodstore();
-        prefsMoodStore.add(moods2);
-        prefs.storeMoodstore(prefsMoodStore);
+    private void saveDefaultMood(Mood mood2) {
+       //if(prefsMoodStore != null) {
+            Prefs prefs = Prefs.get(this);
+            prefsMoodStore = getMoodstore();
+            prefsMoodStore.add(mood2);
+            prefs.storeMoodstore(prefsMoodStore);
+        //}
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
+
+
     private void initListener() {
         mNoteAddButton.setOnClickListener(this);
 
@@ -89,52 +97,61 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         //set title on dialog box
         alertDialogBuilder.setTitle("Commentaire");
         // set dialog message
-        alertDialogBuilder
-                .setCancelable(true)
-                .setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                })
-                .setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, just close
-                        // the dialog box and do nothing
-                        dialog.cancel();
-                    }
-                });
+        alertDialogBuilder.setCancelable(true);
+        alertDialogBuilder.setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                saveComment();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // if this button is clicked, just close
+                // the dialog box and do nothing
+                dialog.cancel();
+            }
+        });
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         // show it
         alertDialog.show();
     }
 
+    private void saveComment(){
+        final EditText input = new EditText(MainActivity.this);
+        Prefs prefs = Prefs.get(MainActivity.this);
+        String mComment = input.getText().toString();
+        Mood.setmComment(mComment);
+        prefs.Moods(mComment);
+    }
+
 
     @NonNull
-    private Moods initMoodsList() {
-        Moods moods1 = new Moods(R.drawable.smiley_super_happy, R.color.banana_yellow, 0);
-        Moods moods2 = new Moods(R.drawable.smiley_happy, R.color.light_sage, 1);
-        Moods moods3 = new Moods(R.drawable.smiley_normal, R.color.cornflower_blue_65, 2);
-        Moods moods4 = new Moods(R.drawable.smiley_disappointed, R.color.warm_grey, 3);
-        Moods moods5 = new Moods(R.drawable.smiley_sad, R.color.faded_red, 4);
+    private Mood initMoodsList() {
+        Mood mood1 = new Mood(R.drawable.smiley_super_happy, R.color.banana_yellow, 0, mComment);
+        Mood mood2 = new Mood(R.drawable.smiley_happy, R.color.light_sage, 1, mComment);
+        Mood mood3 = new Mood(R.drawable.smiley_normal, R.color.cornflower_blue_65, 2, mComment);
+        Mood mood4 = new Mood(R.drawable.smiley_disappointed, R.color.warm_grey, 3, mComment);
+        Mood mood5 = new Mood(R.drawable.smiley_sad, R.color.faded_red, 4, mComment);
 
-        moodsLst = new ArrayList<>();
-        moodsLst.add(moods1);
-        moodsLst.add(moods2);
-        moodsLst.add(moods3);
-        moodsLst.add(moods4);
-        moodsLst.add(moods5);
-        return moods2;
+        moodLst = new ArrayList<>();
+        moodLst.add(mood1);
+        moodLst.add(mood2);
+        moodLst.add(mood3);
+        moodLst.add(mood4);
+        moodLst.add(mood5);
+        return mood2;
     }
 
     public void updateDisplay() {
-        if ((counter >= 0) && (counter < moodsLst.size())) {
-            mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodsLst.get(counter).getmSmiley()));
-            mSmileyMood.setBackground(this.getResources().getDrawable(moodsLst.get(counter).getmBackground()));
-            mLayout.setBackground(this.getResources().getDrawable(moodsLst.get(counter).getmBackground()));
-            mHistoryButton.setBackground(this.getResources().getDrawable(moodsLst.get(counter).getmBackground()));
-            mNoteAddButton.setBackground(this.getResources().getDrawable(moodsLst.get(counter).getmBackground()));
+        if ((counter >= 0) && (counter < moodLst.size())) {
+            mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodLst.get(counter).getmSmiley()));
+            mSmileyMood.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
+            mLayout.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
+            mHistoryButton.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
+            mNoteAddButton.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
         }
     }
+
 
     private void initVars() {
         mLayout = findViewById(R.id.activity_main);
@@ -209,10 +226,10 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
             }
         }
         if (e2.getY() - e1.getY() > 30) {
-            if (counter < moodsLst.size() - 1) {
+            if (counter < moodLst.size() - 1) {
                 counter++;
             } else {
-                counter = moodsLst.size() - 1;
+                counter = moodLst.size() - 1;
             }
         }
         updateDisplay();
@@ -246,10 +263,10 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
 
     private void saveCurrentMood() {
         Prefs prefs = Prefs.get(this);
-        prefsMoodStore = prefs.getMoodstore();
+        prefsMoodStore = getMoodstore();
         if (prefsMoodStore != null) {
             prefsMoodStore.remove(0);
-            prefsMoodStore.add(moodsLst.get(counter));
+            prefsMoodStore.add(moodLst.get(counter));
             prefs.storeMoodstore(prefsMoodStore);
         }
     }

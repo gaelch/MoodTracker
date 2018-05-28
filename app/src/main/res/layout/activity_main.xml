@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_sage"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".controller.MainActivity">
 
     <ImageView
         android:id="@+id/activity_main_mood_image"
         android:layout_width="210dp"
         android:layout_height="210dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/smiley_happy" />
+        android:src="@drawable/smiley_happy"
+        android:contentDescription="TODO" />
 
 
     <ImageButton
@@ -24,7 +27,8 @@
         android:layout_alignTop="@+id/activity_main_note_add_button"
         android:layout_marginEnd="25dp"
         android:background="@color/light_sage"
-        android:src="@drawable/ic_history_black" />
+        android:src="@drawable/ic_history_black"
+        android:contentDescription="TODO" />
 
     <ImageButton
         android:id="@+id/activity_main_note_add_button"

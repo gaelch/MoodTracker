@@ -13,11 +13,8 @@ import java.util.ArrayList;
 public class Prefs  {
     @SuppressLint("StaticFieldLeak")
     private static Prefs instance;
-    private static String PREFS_MOODSTORE = "Moodstore";
-    private static String Moods = "Moods";
-    public static ArrayList<com.cheyrouse.gael.moodtracker.model.Moods> get;
-
-    private Context context;
+    private static String Moods = "Mood";
+    public static ArrayList<Mood> get;
 
     public SharedPreferences getPrefs() {
         return prefs;
@@ -28,12 +25,12 @@ public class Prefs  {
     }
 
     private static SharedPreferences prefs;
-    private Moods moods;
+    private Mood mood;
 
 
     private Prefs(Context context) {
-        this.context = context;
 
+        String PREFS_MOODSTORE = "Moodstore";
         prefs = context.getSharedPreferences(PREFS_MOODSTORE, Activity.MODE_PRIVATE);
 
     }
@@ -44,7 +41,7 @@ public class Prefs  {
         return instance;
     }
 
-    public void storeMoodstore(ArrayList<Moods> moodstore) {
+    public void storeMoodstore(ArrayList<Mood> moodstore) {
         //start writing (open the file)
         SharedPreferences.Editor editor = prefs.edit();
         //put the data
@@ -55,16 +52,16 @@ public class Prefs  {
         editor.apply();
     }
 
-    public static ArrayList<Moods> getMoodstore() {
+    public static ArrayList<Mood> getMoodstore() {
         Gson gson = new Gson();
         String json = prefs.getString(Moods, "");
 
-        ArrayList<Moods> moodstore;
+        ArrayList<Mood> moodstore;
 
         if (json.length() < 1) {
             moodstore = new ArrayList<>();
         } else {
-            Type type = new TypeToken<ArrayList<Moods>>() {
+            Type type = new TypeToken<ArrayList<Mood>>() {
             }.getType();
             moodstore = gson.fromJson(json, type);
         }
@@ -72,6 +69,9 @@ public class Prefs  {
         //return the value that was stored under the key
         //"NAME". If there was no value stored under this key, return null.
         return moodstore;
+    }
+
+    public void Moods(String mComment) {
     }
 }
 
