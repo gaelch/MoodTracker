@@ -1,20 +1,21 @@
 package com.cheyrouse.gael.moodtracker.model;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.cheyrouse.gael.moodtracker.controller.MainActivity;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Prefs  {
-    @SuppressLint("StaticFieldLeak")
+
     private static Prefs instance;
     private static String Moods = "Mood";
     public static ArrayList<Mood> get;
+
 
     public SharedPreferences getPrefs() {
         return prefs;
@@ -35,7 +36,7 @@ public class Prefs  {
 
     }
 
-    public static Prefs get(MainActivity context) {
+    public static Prefs get(Context context) {
         if (instance == null)
             instance = new Prefs(context);
         return instance;
@@ -52,7 +53,7 @@ public class Prefs  {
         editor.apply();
     }
 
-    public static ArrayList<Mood> getMoodstore() {
+    public ArrayList<Mood> getMoodstore() {
         Gson gson = new Gson();
         String json = prefs.getString(Moods, "");
 
@@ -71,8 +72,12 @@ public class Prefs  {
         return moodstore;
     }
 
-    public void Moods(String mComment) {
-    }
+
+
+
+   // public static Prefs get(MainActivity alarmReceiver) {
+        //return null;
+    //}
 }
 
 

@@ -16,7 +16,7 @@
         android:layout_height="210dp"
         android:layout_centerInParent="true"
         android:src="@drawable/smiley_happy"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/image_view" />
 
 
     <ImageButton
@@ -28,7 +28,7 @@
         android:layout_marginEnd="25dp"
         android:background="@color/light_sage"
         android:src="@drawable/ic_history_black"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/image_button" />
 
     <ImageButton
         android:id="@+id/activity_main_note_add_button"
@@ -40,7 +40,8 @@
         android:layout_marginStart="25dp"
         android:background="@color/light_sage"
         android:src="@drawable/ic_note_add_black"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:contentDescription="@string/image_button_note" />
 
 
 </RelativeLayout>

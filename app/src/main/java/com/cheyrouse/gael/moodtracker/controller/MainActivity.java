@@ -1,12 +1,13 @@
 package com.cheyrouse.gael.moodtracker.controller;
 
-
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -17,53 +18,45 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.cheyrouse.gael.moodtracker.R;
+import com.cheyrouse.gael.moodtracker.model.AlarmReceiver;
 import com.cheyrouse.gael.moodtracker.model.Mood;
 import com.cheyrouse.gael.moodtracker.model.Prefs;
+import com.cheyrouse.gael.moodtracker.model.SaveMoodHelper;
 import java.util.ArrayList;
-
-import static com.cheyrouse.gael.moodtracker.model.Prefs.getMoodstore;
-
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends Activity implements OnGestureListener, View.OnClickListener, View.OnTouchListener {
-
+    private static ArrayList<Mood> moodList;
     private ImageView mSmileyMood;
-    private ArrayList<Mood> moodLst;
     private ArrayList<Mood> prefsMoodStore;
-    private int counter;
+    private static int counter;
     private GestureDetector mDetector;
     private RelativeLayout mLayout;
     private ImageButton mHistoryButton;
     private ImageButton mNoteAddButton;
     private String mComment;
-
-
+    Date date;
+    private SaveMoodHelper mSaveMoodHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+         mSaveMoodHelper = new SaveMoodHelper(prefsMoodStore, this);
+
         initVars();
 
         initListener();
 
-        Mood mood2 = initMoodsList();
+        initMoodsList();
 
         counter = 1;
 
-        saveDefaultMood(mood2);
+        date = mSaveMoodHelper.getCurrentDate();
+
+        AlarmMidnight(this);
     }
-
-    private void saveDefaultMood(Mood mood2) {
-       //if(prefsMoodStore != null) {
-            Prefs prefs = Prefs.get(this);
-            prefsMoodStore = getMoodstore();
-            prefsMoodStore.add(mood2);
-            prefs.storeMoodstore(prefsMoodStore);
-        //}
-    }
-
-
-
 
     private void initListener() {
         mNoteAddButton.setOnClickListener(this);
@@ -75,32 +68,33 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         mLayout.setOnTouchListener(this);
     }
 
-
     private void startHistoryActivity() {
         Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
-        historyActivityIntent.putExtra("preferences", prefsMoodStore);
         startActivity(historyActivityIntent);
-
         //Au lancement de l'historique, initialiser l'adapter en lui fournissant la liste des humeurs
         //appel au constructeur Adapteur(Pref pref){mPref = pref}: Adapteur(Prefs.get(this))
     }
 
     private void showCommentDialog() {
         AlertDialog.Builder alertDialogBuilder;
-        final EditText input = new EditText(MainActivity.this);
+        final EditText mCommentInput = new EditText(MainActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
+        mCommentInput.setLayoutParams(lp);
         alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-        alertDialogBuilder.setView(input);
+        alertDialogBuilder.setView(mCommentInput);
         //set title on dialog box
         alertDialogBuilder.setTitle("Commentaire");
         // set dialog message
         alertDialogBuilder.setCancelable(true);
         alertDialogBuilder.setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                saveComment();
+                Prefs.get(MainActivity.this);
+                mComment = mCommentInput.getText().toString();
+                moodList.get(counter).setmComment(mComment);
+                Mood test = moodList.get(counter);
+                mSaveMoodHelper.SaveCurrentMood(test);
             }
         });
         alertDialogBuilder.setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
@@ -116,43 +110,34 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         alertDialog.show();
     }
 
-    private void saveComment(){
-        final EditText input = new EditText(MainActivity.this);
-        Prefs prefs = Prefs.get(MainActivity.this);
-        String mComment = input.getText().toString();
-        Mood.setmComment(mComment);
-        prefs.Moods(mComment);
-    }
+    /*public static int getCounter() {
+        return counter;
+    }*/
 
+    private void initMoodsList() {
+        Mood mood1 = new Mood(R.drawable.smiley_super_happy, R.color.banana_yellow, 4, mComment, date);
+        Mood mood2 = new Mood(R.drawable.smiley_happy, R.color.light_sage, 3, mComment, date);
+        Mood mood3 = new Mood(R.drawable.smiley_normal, R.color.cornflower_blue_65, 2, mComment, date);
+        Mood mood4 = new Mood(R.drawable.smiley_disappointed, R.color.warm_grey, 1, mComment, date);
+        Mood mood5 = new Mood(R.drawable.smiley_sad, R.color.faded_red, 0, mComment, date);
 
-    @NonNull
-    private Mood initMoodsList() {
-        Mood mood1 = new Mood(R.drawable.smiley_super_happy, R.color.banana_yellow, 0, mComment);
-        Mood mood2 = new Mood(R.drawable.smiley_happy, R.color.light_sage, 1, mComment);
-        Mood mood3 = new Mood(R.drawable.smiley_normal, R.color.cornflower_blue_65, 2, mComment);
-        Mood mood4 = new Mood(R.drawable.smiley_disappointed, R.color.warm_grey, 3, mComment);
-        Mood mood5 = new Mood(R.drawable.smiley_sad, R.color.faded_red, 4, mComment);
-
-        moodLst = new ArrayList<>();
-        moodLst.add(mood1);
-        moodLst.add(mood2);
-        moodLst.add(mood3);
-        moodLst.add(mood4);
-        moodLst.add(mood5);
-        return mood2;
+        moodList = new ArrayList<>();
+        moodList.add(mood1);
+        moodList.add(mood2);
+        moodList.add(mood3);
+        moodList.add(mood4);
+        moodList.add(mood5);
     }
 
     public void updateDisplay() {
-        if ((counter >= 0) && (counter < moodLst.size())) {
-            mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodLst.get(counter).getmSmiley()));
-            mSmileyMood.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
-            mLayout.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
-            mHistoryButton.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
-            mNoteAddButton.setBackground(this.getResources().getDrawable(moodLst.get(counter).getmBackground()));
+        if ((counter >= 0) && (counter < moodList.size())) {
+            mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodList.get(counter).getmSmiley()));
+            mSmileyMood.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
+            mLayout.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
+            mHistoryButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
+            mNoteAddButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
         }
     }
-
-
     private void initVars() {
         mLayout = findViewById(R.id.activity_main);
         mSmileyMood = findViewById(R.id.activity_main_mood_image);
@@ -178,12 +163,11 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         System.out.println("MainActivity::onPause()");
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
         System.out.println("MainActivity::onStop()");
-        saveCurrentMood();
+        mSaveMoodHelper.SaveCurrentMood(moodList.get(counter));
     }
 
     @Override
@@ -226,16 +210,15 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
             }
         }
         if (e2.getY() - e1.getY() > 30) {
-            if (counter < moodLst.size() - 1) {
+            if (counter < moodList.size() - 1) {
                 counter++;
             } else {
-                counter = moodLst.size() - 1;
+                counter = moodList.size() - 1;
             }
         }
         updateDisplay();
         return true;
     }
-
 
     @Override
     public void onClick(View v) {
@@ -261,13 +244,31 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         return mDetector.onTouchEvent(event);
     }
 
-    private void saveCurrentMood() {
-        Prefs prefs = Prefs.get(this);
-        prefsMoodStore = getMoodstore();
-        if (prefsMoodStore != null) {
-            prefsMoodStore.remove(0);
-            prefsMoodStore.add(moodLst.get(counter));
-            prefs.storeMoodstore(prefsMoodStore);
+    private void AlarmMidnight(Context context) {
+        AlarmManager alarmManager;
+        PendingIntent pendingIntent;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.DATE, 1);
+
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
+
+        //Réinitialisation de la liste des humeurs, et assignation du smiley par défaut
+        for(int i = 0; i<moodList.size(); i++)
+        {
+            moodList.get(i).setmComment("");
+        }
+        counter = 1;
     }
 }
+
+

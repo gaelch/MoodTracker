@@ -1,5 +1,1 @@
-<root>
-    <item name='android.view.View void setOnTouchListener(android.view.View.OnTouchListener)'>
-        <annotation name='java.lang.Deprecated' />
-    </item>
-</root>
+<root></root>
