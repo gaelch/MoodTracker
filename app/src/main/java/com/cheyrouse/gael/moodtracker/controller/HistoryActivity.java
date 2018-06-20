@@ -24,8 +24,11 @@ public class HistoryActivity extends AppCompatActivity {
 
         ArrayList<Mood> list = Prefs.get(this).getMoodstore();
 
-      //  if (list != null){list.remove(list.size() - 1);}
-        if (list.size() == 0){
+        //To don't show current mood
+        if (list.size() > 0){list.remove(list.size() - 1);}
+
+        //if historical don't exist toast show "You have no history"
+        if (list.size() < 1){
             Toast.makeText(this, "Vous n'avez pas encore d'historique", Toast.LENGTH_LONG).show(); }
 
         RecyclerView recyclerView = findViewById(R.id.activity_history_item);

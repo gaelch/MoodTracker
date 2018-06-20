@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -38,6 +39,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
     private String mComment;
     Date date;
     private SaveMoodHelper mSaveMoodHelper;
+    private MediaPlayer mPlayer;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +60,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         AlarmMidnight(this);
     }
 
-    //initialization of listeners
+    //listeners initialization
     private void initListener() {
 
         mNoteAddButton.setOnClickListener(this);
@@ -69,12 +71,10 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
 
         mLayout.setOnTouchListener(this);
     }
-    //Start of the HistoryActivity
+    //Start HistoryActivity
     private void startHistoryActivity() {
         Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
         startActivity(historyActivityIntent);
-        //Au lancement de l'historique, initialiser l'adapter en lui fournissant la liste des humeurs
-        //appel au constructeur Adapteur(Pref pref){mPref = pref}: Adapteur(Prefs.get(this))
     }
     //This method that show a dialog box that allows you to add a comment to the chosen mood
     private void showCommentDialog() {
@@ -143,6 +143,15 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         mHistoryButton = findViewById(R.id.activity_main_history_button);
         mNoteAddButton = findViewById(R.id.activity_main_note_add_button);
     }
+    //method to play Sound on the swipe
+    private void playSound(int resId) {
+        if(mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
+        mPlayer = MediaPlayer.create(this, resId);
+        mPlayer.start();
+    }
 
     @Override
     protected void onStart() {
@@ -155,12 +164,11 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         super.onResume();
         System.out.println("MainActivity::onResume()");
     }
-    //On the onPause, call the method SaveCurrentMood to save the current mood
+
     @Override
     protected void onPause() {
         super.onPause();
         System.out.println("MainActivity::onPause()");
-
     }
 
     //On the OnStop, call the method SaveCurrentMood to save the current mood
@@ -206,6 +214,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         if (e1.getY() - e2.getY() > 30) {
             if (counter > 0) {
                 counter--;
+                playSound(R.raw.supermarioup);
             } else {
                 counter = 0;
             }
@@ -213,6 +222,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         if (e2.getY() - e1.getY() > 30) {
             if (counter < moodList.size() - 1) {
                 counter++;
+                playSound(R.raw.coin);
             } else {
                 counter = moodList.size() - 1;
             }
@@ -220,7 +230,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         updateDisplay();
         return true;
     }
-
+    //This onclick call dialog box or HistoryActivity
     @Override
     public void onClick(View v) {
 
@@ -239,7 +249,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
                 break;
         }
     }
-
+    //method Called when a touch event is dispatched to a view.
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         v.performClick();

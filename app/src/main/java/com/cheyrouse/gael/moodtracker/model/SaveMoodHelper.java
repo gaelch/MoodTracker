@@ -36,14 +36,15 @@ public class SaveMoodHelper {
         if(prefsMoodStore == null){
             prefsMoodStore = new ArrayList<>();
         }
-        if (prefsMoodStore.size() > 0 && (prefsMoodStore.get(prefsMoodStore.size()-1).getDate())==(getCurrentDate())) {
+        if (prefsMoodStore.size() > 0 && (prefsMoodStore.get(prefsMoodStore.size()-1).getDate()).equals(getCurrentDate())) {
             prefsMoodStore.remove(prefsMoodStore.size() - 1);
         }
         prefsMoodStore.add(currentMood);
         prefs.storeMoodstore(prefsMoodStore);
 
-        if (prefsMoodStore.size() == 7) {
+        if (prefsMoodStore.size() > 7) {
             prefsMoodStore.remove(0);
+            System.out.println(prefsMoodStore.size());
         }
 
     }
@@ -60,7 +61,7 @@ public class SaveMoodHelper {
             prefs.storeMoodstore(prefsMoodStore);
         }
 
-        if (prefsMoodStore.size() == 7) {
+        if (prefsMoodStore.size() < 8) {
             prefsMoodStore.remove(0);
         }
     }

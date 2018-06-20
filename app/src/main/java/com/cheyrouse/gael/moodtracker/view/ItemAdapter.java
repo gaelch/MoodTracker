@@ -40,7 +40,7 @@ public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder>  {
 
         holder.mainLayout.setLayoutParams(new RelativeLayout.LayoutParams(230 + lMoodstore.get(position).getmId() * 215,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-
+        //call ArrayList items position to display them
         final Mood item = lMoodstore.get(position);
 
         //put background colors items
