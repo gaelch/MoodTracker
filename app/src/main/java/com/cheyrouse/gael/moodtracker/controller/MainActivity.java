@@ -58,7 +58,9 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         AlarmMidnight(this);
     }
 
+    //initialization of listeners
     private void initListener() {
+
         mNoteAddButton.setOnClickListener(this);
 
         mHistoryButton.setOnClickListener(this);
@@ -67,14 +69,14 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
 
         mLayout.setOnTouchListener(this);
     }
-
+    //Start of the HistoryActivity
     private void startHistoryActivity() {
         Intent historyActivityIntent = new Intent(MainActivity.this, HistoryActivity.class);
         startActivity(historyActivityIntent);
         //Au lancement de l'historique, initialiser l'adapter en lui fournissant la liste des humeurs
         //appel au constructeur Adapteur(Pref pref){mPref = pref}: Adapteur(Prefs.get(this))
     }
-
+    //This method that show a dialog box that allows you to add a comment to the chosen mood
     private void showCommentDialog() {
         AlertDialog.Builder alertDialogBuilder;
         final EditText mCommentInput = new EditText(MainActivity.this);
@@ -109,11 +111,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         // show it
         alertDialog.show();
     }
-
-    /*public static int getCounter() {
-        return counter;
-    }*/
-
+    //Initialization of the mood list for the swipe
     private void initMoodsList() {
         Mood mood1 = new Mood(R.drawable.smiley_super_happy, R.color.banana_yellow, 4, mComment, date);
         Mood mood2 = new Mood(R.drawable.smiley_happy, R.color.light_sage, 3, mComment, date);
@@ -128,7 +126,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         moodList.add(mood4);
         moodList.add(mood5);
     }
-
+    //This method is used to display moods in the main layout
     public void updateDisplay() {
         if ((counter >= 0) && (counter < moodList.size())) {
             mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodList.get(counter).getmSmiley()));
@@ -138,6 +136,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
             mNoteAddButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
         }
     }
+    //Initialization of the variables
     private void initVars() {
         mLayout = findViewById(R.id.activity_main);
         mSmileyMood = findViewById(R.id.activity_main_mood_image);
@@ -156,13 +155,15 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         super.onResume();
         System.out.println("MainActivity::onResume()");
     }
-
+    //On the onPause, call the method SaveCurrentMood to save the current mood
     @Override
     protected void onPause() {
         super.onPause();
         System.out.println("MainActivity::onPause()");
+
     }
 
+    //On the OnStop, call the method SaveCurrentMood to save the current mood
     @Override
     protected void onStop() {
         super.onStop();
@@ -199,7 +200,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
     @Override
     public void onLongPress(MotionEvent e) {
     }
-
+    //This method is the Swipe
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if (e1.getY() - e2.getY() > 30) {
@@ -241,9 +242,10 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        v.performClick();
         return mDetector.onTouchEvent(event);
     }
-
+    //At midnight, the alarm goes off to save the mood of the day
     private void AlarmMidnight(Context context) {
         AlarmManager alarmManager;
         PendingIntent pendingIntent;
@@ -262,10 +264,10 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
 
-        //Réinitialisation de la liste des humeurs, et assignation du smiley par défaut
+        //Resetting the mood list, and assigning the default smiley
         for(int i = 0; i<moodList.size(); i++)
         {
-            moodList.get(i).setmComment("");
+            moodList.get(i).setmComment(null);
         }
         counter = 1;
     }

@@ -71,13 +71,6 @@ public class Prefs  {
         //"NAME". If there was no value stored under this key, return null.
         return moodstore;
     }
-
-
-
-
-   // public static Prefs get(MainActivity alarmReceiver) {
-        //return null;
-    //}
 }
 
 

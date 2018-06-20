@@ -17,7 +17,7 @@ public class SaveMoodHelper {
 
 
     public SaveMoodHelper(ArrayList<Mood> prefsMoodStore, MainActivity context) {
-        //this.prefsMoodStore = prefsMoodStore;
+        this.prefsMoodStore = prefsMoodStore;
         this.context = context;
     }
 
@@ -36,26 +36,16 @@ public class SaveMoodHelper {
         if(prefsMoodStore == null){
             prefsMoodStore = new ArrayList<>();
         }
-        if (prefsMoodStore.size() > 0 && (prefsMoodStore.get(prefsMoodStore.size()-1).getDate()).equals(getCurrentDate())) {
+        if (prefsMoodStore.size() > 0 && (prefsMoodStore.get(prefsMoodStore.size()-1).getDate())==(getCurrentDate())) {
             prefsMoodStore.remove(prefsMoodStore.size() - 1);
         }
         prefsMoodStore.add(currentMood);
         prefs.storeMoodstore(prefsMoodStore);
-        //}else if (prefsMoodStore.size() > 0 && prefsMoodStore.get(prefsMoodStore.size() - 1).getDate() != getCurrentDate())
-        //{
-        //    prefsMoodStore.add(currentMood);
-        //    prefs.storeMoodstore(prefsMoodStore);
-        //}
 
-      //if(prefsMoodStore.size() == 0){
-
-      //    prefsMoodStore.add(currentMood);
-
-      //}
-
-        if (prefsMoodStore.size() > 7) {
+        if (prefsMoodStore.size() == 7) {
             prefsMoodStore.remove(0);
         }
+
     }
 
     public void SaveMoodMidnight() {
@@ -70,7 +60,7 @@ public class SaveMoodHelper {
             prefs.storeMoodstore(prefsMoodStore);
         }
 
-        if (prefsMoodStore.size() > 7) {
+        if (prefsMoodStore.size() == 7) {
             prefsMoodStore.remove(0);
         }
     }
