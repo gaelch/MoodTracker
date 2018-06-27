@@ -7,15 +7,16 @@ import android.widget.TextView;
 
 import com.cheyrouse.gael.moodtracker.R;
 
+//this class is used to initialize the views
 public class MyViewHolder extends RecyclerView.ViewHolder {
     public View mainLayout;
     public TextView textView;
     public ImageButton commentButton;
 
-
+    //item adapter view initialization
     MyViewHolder(View itemView) {
         super(itemView);
-        mainLayout = itemView.findViewById(R.id.main_lay);
+        mainLayout = itemView;
         textView = itemView.findViewById(R.id.textView);
         commentButton = itemView.findViewById(R.id.commentButton);
     }

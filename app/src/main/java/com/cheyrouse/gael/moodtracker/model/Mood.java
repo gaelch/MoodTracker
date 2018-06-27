@@ -1,14 +1,11 @@
 package com.cheyrouse.gael.moodtracker.model;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.Date;
 import java.util.Hashtable;
 
-public class Mood implements Parcelable {
-
+//creating the mood and these parameters
+public class Mood /*implements Parcelable*/ {
     private int mSmiley;
     private int mBackground;
     private String mComment;
@@ -19,24 +16,12 @@ public class Mood implements Parcelable {
         return mId;
     }
 
-    public void setmId(int mId) {
-        this.mId = mId;
-    }
-
     public int getmSmiley() {
         return mSmiley;
     }
 
-    public void setmSmiley(int mSmiley) {
-        this.mSmiley = mSmiley;
-    }
-
     public int getmBackground() {
         return mBackground;
-    }
-
-    public void setmBackground(int mBackground) {
-        this.mBackground = mBackground;
     }
 
     public String getmComment() {
@@ -55,8 +40,8 @@ public class Mood implements Parcelable {
         this.date = date;
     }
 
+    //Mood constructor
     public Mood(int mSmiley, int mBackground, int Id, String mComment, Date date) {
-
         this.mSmiley = mSmiley;
         this.mBackground = mBackground;
         this.mId = Id;
@@ -64,6 +49,7 @@ public class Mood implements Parcelable {
         this.date = date;
     }
 
+    //This Hash table is called for display days on adapter
     public String getDays(int days) {
         Hashtable<Integer, String> weekDays = new Hashtable<>();
         weekDays.put(7, "Il y a une semaine");
@@ -76,40 +62,5 @@ public class Mood implements Parcelable {
 
         return weekDays.get(days);
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mSmiley);
-        dest.writeInt(this.mBackground);
-        dest.writeInt(this.mId);
-        dest.writeString(this.mComment);
-        dest.writeLong(this.date != null ? this.date.getTime() : -1);
-    }
-
-    protected Mood(Parcel in) {
-        this.mSmiley = in.readInt();
-        this.mBackground = in.readInt();
-        this.mId = in.readInt();
-        this.mComment = in.readString();
-        long tmpDate = in.readLong();
-        this.date = tmpDate == -1 ? null : new Date(tmpDate);
-    }
-
-    public static final Creator<Mood> CREATOR = new Creator<Mood>() {
-        @Override
-        public Mood createFromParcel(Parcel source) {
-            return new Mood(source);
-        }
-
-        @Override
-        public Mood[] newArray(int size) {
-            return new Mood[size];
-        }
-    };
 }
 

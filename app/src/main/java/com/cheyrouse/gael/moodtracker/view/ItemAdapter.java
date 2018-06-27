@@ -15,17 +15,19 @@ import com.cheyrouse.gael.moodtracker.model.Mood;
 
 import java.util.ArrayList;
 
-
+//Adapters provide a binding from an app-specific data set that is displayed within a RecyclerView.
 public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder>  {
-
     private final Context mContext;
-    private ArrayList<Mood> lMoodstore; //variable locale à la classe ItemAdapter, accessible depuis toutes le fct de la classe
+    private ArrayList<Mood> lMoodStore; // local variable to the ItemAdapter class, accessible from all functions of the class
 
+
+    //adapter constructor
     public ItemAdapter(ArrayList<Mood> moods, Context context) {
-        this.lMoodstore = moods;
+        this.lMoodStore = moods;
         mContext = context;
     }
 
+    //Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type to represent an item.
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,28 +36,29 @@ public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder>  {
         return new MyViewHolder(view);
     }
 
-
+    //This method internally calls onBindViewHolder(ViewHolder, int) to update the RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
-        holder.mainLayout.setLayoutParams(new RelativeLayout.LayoutParams(230 + lMoodstore.get(position).getmId() * 215,
+        holder.mainLayout.setLayoutParams(new RelativeLayout.LayoutParams(230 + lMoodStore.get(position).getmId() * 215,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+
         //call ArrayList items position to display them
-        final Mood item = lMoodstore.get(position);
+        final Mood item = lMoodStore.get(position);
 
         //put background colors items
-        int idDrawable = lMoodstore.get(position).getmBackground();
+        int idDrawable = lMoodStore.get(position).getmBackground();
         Drawable drawable = mContext.getResources().getDrawable(idDrawable);
         holder.textView.setBackground(drawable);
         holder.commentButton.setBackground(drawable);
 
         // put week days on textView
-        holder.textView.setText(item.getDays(lMoodstore.size() - position));
+        holder.textView.setText(item.getDays(lMoodStore.size() - position));
 
         //if comment exist, comment icon set visible and comment show when user click
-        if (lMoodstore.get(position).getmComment() != null){
+        if (lMoodStore.get(position).getmComment() != null){
             holder.commentButton.setVisibility(View.VISIBLE);
-            final String comment = lMoodstore.get(position).getmComment();
+            final String comment = lMoodStore.get(position).getmComment();
 
             holder.commentButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,10 +69,11 @@ public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder>  {
         }else holder.commentButton.setVisibility(View.INVISIBLE);
     }
 
+    //Returns the total number of items in the data set held by the adapter
     @Override
     public int getItemCount() {
-        if (lMoodstore != null) {
-            return lMoodstore.size();
+        if (lMoodStore != null) {
+            return lMoodStore.size();
         } else {
             return 0;
         }

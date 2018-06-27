@@ -13,27 +13,29 @@ import com.cheyrouse.gael.moodtracker.view.ItemAdapter;
 
 import java.util.ArrayList;
 
+//it is an activity that allows to manage the history of the application
 public class HistoryActivity extends AppCompatActivity {
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        ArrayList<Mood> list = Prefs.get(this).getMoodstore();
+        //recovers saved ArrayList to Prefs class
+        ArrayList<Mood> list = Prefs.get(this).getMoodStore();
 
-        //To don't show current mood
-        if (list.size() > 0){list.remove(list.size() - 1);}
+        //To don't display current mood
+       if (list.size() > 0){list.remove(list.size() - 1);}
 
-        //if historical don't exist toast show "You have no history"
+        //if historical don't exist, toast show "You have no history"
         if (list.size() < 1){
             Toast.makeText(this, "Vous n'avez pas encore d'historique", Toast.LENGTH_LONG).show(); }
 
+        //instantiation of recyclerView and use a linearLayoutManager
         RecyclerView recyclerView = findViewById(R.id.activity_history_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //give the list to adapter to display items on it
         ItemAdapter mItemAdapter = new ItemAdapter(list, this);
         recyclerView.setAdapter(mItemAdapter);
     }

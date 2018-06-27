@@ -17,12 +17,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+
 import com.cheyrouse.gael.moodtracker.R;
 import com.cheyrouse.gael.moodtracker.model.AlarmReceiver;
 import com.cheyrouse.gael.moodtracker.model.Mood;
+import com.cheyrouse.gael.moodtracker.model.MyRelativeLayout;
 import com.cheyrouse.gael.moodtracker.model.Prefs;
 import com.cheyrouse.gael.moodtracker.model.SaveMoodHelper;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,10 +32,9 @@ import java.util.Date;
 public class MainActivity extends Activity implements OnGestureListener, View.OnClickListener, View.OnTouchListener {
     private static ArrayList<Mood> moodList;
     private ImageView mSmileyMood;
-    private ArrayList<Mood> prefsMoodStore;
     private static int counter;
     private GestureDetector mDetector;
-    private RelativeLayout mLayout;
+    private MyRelativeLayout mLayout;
     private ImageButton mHistoryButton;
     private ImageButton mNoteAddButton;
     private String mComment;
@@ -45,7 +46,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         mSaveMoodHelper = new SaveMoodHelper(prefsMoodStore, this);
+         mSaveMoodHelper = new SaveMoodHelper(this);
 
         initVars();
 
@@ -70,6 +71,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         mDetector = new GestureDetector(MainActivity.this);
 
         mLayout.setOnTouchListener(this);
+
     }
     //Start HistoryActivity
     private void startHistoryActivity() {
@@ -130,7 +132,6 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
     public void updateDisplay() {
         if ((counter >= 0) && (counter < moodList.size())) {
             mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodList.get(counter).getmSmiley()));
-            mSmileyMood.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
             mLayout.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
             mHistoryButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
             mNoteAddButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
@@ -165,18 +166,19 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         System.out.println("MainActivity::onResume()");
     }
 
+    //On the onPause, call the method SaveCurrentMood to save the current mood
     @Override
     protected void onPause() {
         super.onPause();
         System.out.println("MainActivity::onPause()");
+        mSaveMoodHelper.SaveCurrentMood(moodList.get(counter));
     }
 
-    //On the OnStop, call the method SaveCurrentMood to save the current mood
     @Override
     protected void onStop() {
         super.onStop();
         System.out.println("MainActivity::onStop()");
-        mSaveMoodHelper.SaveCurrentMood(moodList.get(counter));
+
     }
 
     @Override
@@ -255,26 +257,30 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         v.performClick();
         return mDetector.onTouchEvent(event);
     }
+
     //At midnight, the alarm goes off to save the mood of the day
     private void AlarmMidnight(Context context) {
         AlarmManager alarmManager;
         PendingIntent pendingIntent;
 
+        //in a current date at midnight, this property get an instance to calendar
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.add(Calendar.DATE, 1);
 
+        //call AlarmReceiver class
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
+        //RTC-WAKEUP that will wake the device when it turns off.
         if (alarmManager != null) {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
 
-        //Resetting the mood list, and assigning the default smiley
+        //Resetting the mood list comment, and assigning the default smiley
         for(int i = 0; i<moodList.size(); i++)
         {
             moodList.get(i).setmComment(null);

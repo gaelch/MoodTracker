@@ -3,73 +3,61 @@ package com.cheyrouse.gael.moodtracker.model;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+//This class saves moods using SharedPreferences and the Gson library
 public class Prefs  {
-
     private static Prefs instance;
     private static String Moods = "Mood";
-    public static ArrayList<Mood> get;
-
-
-    public SharedPreferences getPrefs() {
-        return prefs;
-    }
-
-    public void setPrefs(SharedPreferences prefs) {
-        Prefs.prefs = prefs;
-    }
-
     private static SharedPreferences prefs;
-    private Mood mood;
 
 
+    //Class Prefs constructor
     private Prefs(Context context) {
-
-        String PREFS_MOODSTORE = "Moodstore";
-        prefs = context.getSharedPreferences(PREFS_MOODSTORE, Activity.MODE_PRIVATE);
+        String PREFS_MOOD_STORE = "MoodStore";
+        prefs = context.getSharedPreferences(PREFS_MOOD_STORE, Activity.MODE_PRIVATE);
 
     }
-
+    //Prefs.get is called in SaveMoodHelper to create a new instance of Prefs
     public static Prefs get(Context context) {
         if (instance == null)
             instance = new Prefs(context);
         return instance;
     }
 
-    public void storeMoodstore(ArrayList<Mood> moodstore) {
+    //storeMoodStore change ArrayList into json strings and save it
+    public void storeMoodStore(ArrayList<Mood> moodStore) {
         //start writing (open the file)
         SharedPreferences.Editor editor = prefs.edit();
         //put the data
         Gson gson = new Gson();
-        String json = gson.toJson(moodstore);
+        String json = gson.toJson(moodStore);
         editor.putString(Moods, json);
         //close the file
         editor.apply();
     }
 
-    public ArrayList<Mood> getMoodstore() {
+    //getMoodStore recovers json strings and return there in ArrayList
+    public ArrayList<Mood> getMoodStore() {
         Gson gson = new Gson();
         String json = prefs.getString(Moods, "");
 
-        ArrayList<Mood> moodstore;
+        ArrayList<Mood> moodStore;
 
         if (json.length() < 1) {
-            moodstore = new ArrayList<>();
+            moodStore = new ArrayList<>();
         } else {
             Type type = new TypeToken<ArrayList<Mood>>() {
             }.getType();
-            moodstore = gson.fromJson(json, type);
+            moodStore = gson.fromJson(json, type);
         }
 
         //return the value that was stored under the key
-        //"NAME". If there was no value stored under this key, return null.
-        return moodstore;
+
+        return moodStore;
     }
 }
 

@@ -10,29 +10,30 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class SaveMoodHelper {
-    private ArrayList<Mood> prefsMoodStore;
     private Context context;
 
+    //SaveMoodHelper builder
+    public SaveMoodHelper( MainActivity context) {
 
-    public SaveMoodHelper(ArrayList<Mood> prefsMoodStore, MainActivity context) {
-        this.prefsMoodStore = prefsMoodStore;
         this.context = context;
     }
 
+    //to recover the current date
     public Date getCurrentDate() {
         Date date;
-        DateFormat outputFormatter = new SimpleDateFormat("MM/dd/yyyy");
+        DateFormat outputFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
         date = Calendar.getInstance().getTime();
         date = new Date(outputFormatter.format(date));
         return date;
     }
-
+    //this method is called to save current mood
     public void SaveCurrentMood(Mood currentMood) {
         currentMood.setDate(getCurrentDate());
         Prefs prefs = Prefs.get(context);
-        ArrayList<Mood> prefsMoodStore = prefs.getMoodstore();
+        ArrayList<Mood> prefsMoodStore = prefs.getMoodStore();
         if(prefsMoodStore == null){
             prefsMoodStore = new ArrayList<>();
         }
@@ -40,7 +41,7 @@ public class SaveMoodHelper {
             prefsMoodStore.remove(prefsMoodStore.size() - 1);
         }
         prefsMoodStore.add(currentMood);
-        prefs.storeMoodstore(prefsMoodStore);
+        prefs.storeMoodStore(prefsMoodStore);
 
         if (prefsMoodStore.size() > 7) {
             prefsMoodStore.remove(0);
@@ -48,20 +49,20 @@ public class SaveMoodHelper {
         }
 
     }
-
+    //method called by AlarmMidnight to save current mood or default mood if MoodTracker is not started in the day
     public void SaveMoodMidnight() {
         Prefs prefs = Prefs.get(context);
-        ArrayList<Mood> prefsMoodStore = prefs.getMoodstore();
+        ArrayList<Mood> prefsMoodStore = prefs.getMoodStore();
         if(prefsMoodStore == null){
             prefsMoodStore = new ArrayList<>();
         }
         if (prefsMoodStore.size() > 0 && (prefsMoodStore.get(prefsMoodStore.size()-1).getDate()) != getCurrentDate()) {
             Mood defaultMood = new Mood(R.drawable.smiley_happy, R.color.light_sage, 1, "", getCurrentDate());
             prefsMoodStore.add(defaultMood);
-            prefs.storeMoodstore(prefsMoodStore);
+            prefs.storeMoodStore(prefsMoodStore);
         }
 
-        if (prefsMoodStore.size() < 8) {
+        if (prefsMoodStore.size() > 7) {
             prefsMoodStore.remove(0);
         }
     }
