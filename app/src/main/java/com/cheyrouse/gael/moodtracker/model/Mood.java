@@ -5,30 +5,30 @@ import java.util.Date;
 import java.util.Hashtable;
 
 //creating the mood and these parameters
-public class Mood /*implements Parcelable*/ {
+public class Mood  {
     private int mSmiley;
     private int mBackground;
     private String mComment;
     private Date date;
     private int mId;
 
-    public int getmId() {
+    public int getId() {
         return mId;
     }
 
-    public int getmSmiley() {
+    public int getSmiley() {
         return mSmiley;
     }
 
-    public int getmBackground() {
+    public int getBackground() {
         return mBackground;
     }
 
-    public String getmComment() {
+    public String getComment() {
         return mComment;
     }
 
-    public void setmComment(String comment) {
+    public void setComment(String comment) {
         this.mComment = comment;
     }
 

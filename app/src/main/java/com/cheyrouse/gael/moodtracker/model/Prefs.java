@@ -11,7 +11,7 @@ import java.util.ArrayList;
 //This class saves moods using SharedPreferences and the Gson library
 public class Prefs  {
     private static Prefs instance;
-    private static String Moods = "Mood";
+    private static final String Moods = "Mood";
     private static SharedPreferences prefs;
 
 

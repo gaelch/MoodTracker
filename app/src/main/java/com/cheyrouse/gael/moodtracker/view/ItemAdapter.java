@@ -40,14 +40,14 @@ public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder>  {
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
-        holder.mainLayout.setLayoutParams(new RelativeLayout.LayoutParams(230 + lMoodStore.get(position).getmId() * 215,
+        holder.mainLayout.setLayoutParams(new RelativeLayout.LayoutParams(230 + lMoodStore.get(position).getId() * 215,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
         //call ArrayList items position to display them
         final Mood item = lMoodStore.get(position);
 
         //put background colors items
-        int idDrawable = lMoodStore.get(position).getmBackground();
+        int idDrawable = lMoodStore.get(position).getBackground();
         Drawable drawable = mContext.getResources().getDrawable(idDrawable);
         holder.textView.setBackground(drawable);
         holder.commentButton.setBackground(drawable);
@@ -56,9 +56,9 @@ public class ItemAdapter extends RecyclerView.Adapter<MyViewHolder>  {
         holder.textView.setText(item.getDays(lMoodStore.size() - position));
 
         //if comment exist, comment icon set visible and comment show when user click
-        if (lMoodStore.get(position).getmComment() != null){
+        if (lMoodStore.get(position).getComment() != null){
             holder.commentButton.setVisibility(View.VISIBLE);
-            final String comment = lMoodStore.get(position).getmComment();
+            final String comment = lMoodStore.get(position).getComment();
 
             holder.commentButton.setOnClickListener(new View.OnClickListener() {
                 @Override

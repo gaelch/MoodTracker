@@ -9,7 +9,7 @@ import com.cheyrouse.gael.moodtracker.R;
 
 //this class is used to initialize the views
 public class MyViewHolder extends RecyclerView.ViewHolder {
-    public View mainLayout;
+    public final View mainLayout;
     public TextView textView;
     public ImageButton commentButton;
 

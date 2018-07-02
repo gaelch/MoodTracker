@@ -39,7 +39,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
     private ImageButton mNoteAddButton;
     private String mComment;
     Date date;
-    private SaveMoodHelper mSaveMoodHelper;
+    SaveMoodHelper mSaveMoodHelper;
     private MediaPlayer mPlayer;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,19 +89,19 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilder.setView(mCommentInput);
         //set title on dialog box
-        alertDialogBuilder.setTitle("Commentaire");
+        alertDialogBuilder.setTitle(R.string.commentaire);
         // set dialog message
         alertDialogBuilder.setCancelable(true);
-        alertDialogBuilder.setPositiveButton("VALIDER", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.valider, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Prefs.get(MainActivity.this);
                 mComment = mCommentInput.getText().toString();
-                moodList.get(counter).setmComment(mComment);
+                moodList.get(counter).setComment(mComment);
                 Mood test = moodList.get(counter);
                 mSaveMoodHelper.SaveCurrentMood(test);
             }
         });
-        alertDialogBuilder.setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.annuler, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // if this button is clicked, just close
                 // the dialog box and do nothing
@@ -129,12 +129,12 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         moodList.add(mood5);
     }
     //This method is used to display moods in the main layout
-    public void updateDisplay() {
+    private void updateDisplay() {
         if ((counter >= 0) && (counter < moodList.size())) {
-            mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodList.get(counter).getmSmiley()));
-            mLayout.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
-            mHistoryButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
-            mNoteAddButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getmBackground()));
+            mSmileyMood.setImageDrawable(this.getResources().getDrawable(moodList.get(counter).getSmiley()));
+            mLayout.setBackground(this.getResources().getDrawable(moodList.get(counter).getBackground()));
+            mHistoryButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getBackground()));
+            mNoteAddButton.setBackground(this.getResources().getDrawable(moodList.get(counter).getBackground()));
         }
     }
     //Initialization of the variables
@@ -283,7 +283,7 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
         //Resetting the mood list comment, and assigning the default smiley
         for(int i = 0; i<moodList.size(); i++)
         {
-            moodList.get(i).setmComment(null);
+            moodList.get(i).setComment(null);
         }
         counter = 1;
     }
