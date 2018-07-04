@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends Activity implements OnGestureListener, View.OnClickListener, View.OnTouchListener {
-    private static ArrayList<Mood> moodList;
+    private ArrayList<Mood> moodList;
     private ImageView mSmileyMood;
     private static int counter;
     private GestureDetector mDetector;
@@ -178,7 +178,6 @@ public class MainActivity extends Activity implements OnGestureListener, View.On
     protected void onStop() {
         super.onStop();
         System.out.println("MainActivity::onStop()");
-
     }
 
     @Override

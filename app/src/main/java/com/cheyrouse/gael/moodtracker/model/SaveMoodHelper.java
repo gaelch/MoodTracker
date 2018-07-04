@@ -41,13 +41,13 @@ public class SaveMoodHelper {
             prefsMoodStore.remove(prefsMoodStore.size() - 1);
         }
         prefsMoodStore.add(currentMood);
-        prefs.storeMoodStore(prefsMoodStore);
 
-        if (prefsMoodStore.size() > 7) {
+        if (prefsMoodStore.size() > 8) {
             prefsMoodStore.remove(0);
             System.out.println(prefsMoodStore.size());
         }
 
+        prefs.storeMoodStore(prefsMoodStore);
     }
     //method called by AlarmMidnight to save current mood or default mood if MoodTracker is not started in the day
     public void SaveMoodMidnight() {
@@ -59,12 +59,13 @@ public class SaveMoodHelper {
         if (prefsMoodStore.size() > 0 && (prefsMoodStore.get(prefsMoodStore.size()-1).getDate()) != getCurrentDate()) {
             Mood defaultMood = new Mood(R.drawable.smiley_happy, R.color.light_sage, 1, "", getCurrentDate());
             prefsMoodStore.add(defaultMood);
-            prefs.storeMoodStore(prefsMoodStore);
         }
 
         if (prefsMoodStore.size() > 7) {
             prefsMoodStore.remove(0);
         }
+
+        prefs.storeMoodStore(prefsMoodStore);
     }
 
 }
